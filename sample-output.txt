@@ -1,0 +1,15 @@
+# Desensitised output (us-west-2, 2026-10). Policy store IDs are per-run and ephemeral.
+
+# verify_forbid_precedence.sh
+policy store: <STORE_ID>
+--- permit + conflicting forbid (expect DENY) ---
+DENY
+--- permit only, no forbid (expect ALLOW) ---
+ALLOW
+deleted policy store <STORE_ID>
+
+# End-to-end check of the AgentCore policy shapes (agentcore_policies.cedar):
+#   PERMIT block  -> accepted by the Cedar engine (valid)
+#   FORBID block  -> accepted by the Cedar engine (valid)
+#   is-authorized for refund-agent at amount=15000, with a matching permit AND the
+#   forbid both applying -> DECISION: DENY, determining policy = the forbid. No errors.
